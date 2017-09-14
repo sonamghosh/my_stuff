@@ -1,0 +1,99 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{tabu}
+\usepackage{gensymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage[export]{adjustbox}
+\usepackage[T1]{fontenc}
+\usepackage{braket}
+
+%\usepackage[pdftex,active,tightpage]{preview}
+%\setlength\PreviewBorder{2mm}
+\usepackage{tikz-3dplot}
+\usepackage{listings, xcolor}
+\usepackage[colorlinks = true,
+            linkcolor = blue,
+            urlcolor  = blue,
+            citecolor = blue,
+            anchorcolor = blue]{hyperref}
+
+\title{Fault Profile Generator Tools User Guide}
+\author{Sonam Ghosh J82C}
+\date{August 2017}
+\lstset{
+    string=[s]{"}{"},
+    stringstyle=\color{blue},
+    comment=[l]{:},
+    commentstyle=\color{black},
+}
+
+
+%\title{senior_thesis_work_summary_9_14_2017}
+%\author{sonamghosh }
+%\date{September 2017}
+
+\begin{document}
+
+%\maketitle
+Work Progress 9/14/2017 \newline
+Note: Images made on MS Paint. Apologies for the bad quality when constructing the diagram. \newline
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.5]{benzene_optical_01.png}
+    \caption{Multiport setup in Benzene-like Setup}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{multiport_cell_01.png}
+    \caption{Multiport cell close up of one of the segments labeled}
+    \label{fig:my_label}
+\end{figure}
+
+\newpage
+States denoted as:
+$$ \ket{n, C, D} $$
+Where $n$ is the lattice slice , $n \in \{1,2,3,4,5,6\}$, C is which way around the molecule a photon/electron is rotating either clockwise $CW$ or counter clockwise $CCW$, where I define $CW$ to be $-1$ and $CCW$ to be $1$, $C \in \{-1, 1\}$. D is the motion of the particle, if it is on the side of a single input/output then it is left $L$ and if it is on the double input/output side then it is right $R$, $D \in \{L, R\}$. \newline
+Ports $A, B, C$ are noted by their states in a standard basis as follow: 
+$$ \ket{A} = \begin{pmatrix} 
+1 \\
+0 \\
+0
+\end{pmatrix} ,
+ \ket{B} = \begin{pmatrix} 
+0 \\
+1 \\
+0
+\end{pmatrix} ,
+ \ket{C} = \begin{pmatrix} 
+0 \\
+0 \\
+1
+\end{pmatrix} 
+$$
+States of direction are denoted as follow:
+$$ \ket{L} =  \begin{pmatrix} 
+1 \\
+0 \\
+0
+\end{pmatrix} , 
+\ket{R} = \frac{1}{\sqrt{2}}\begin{pmatrix}
+0 \\
+1 \\
+1
+\end{pmatrix}
+$$
+Available nearest-cell interactions: \newline
+\begin{enumerate}
+    \item $\ket{n,1,L}\bra{n,1,R}$
+    \item $\ket{n,1,R}\bra{n+1,1,R}$
+    \item $\ket{n,-1,R}\bra{n,-1,R}$
+    \item $\ket{n-1,1,L}\bra{n,1,L}$
+    \item $\ket{n-1,-1,L}\bra{n,-1,L}$
+    \item $\ket{n,-1,R}\bra{n,-1,L}$
+\end{enumerate}
+\end{document}
