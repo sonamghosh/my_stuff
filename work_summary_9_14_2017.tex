@@ -87,7 +87,8 @@ $$ \ket{L} =  \begin{pmatrix}
 1
 \end{pmatrix}
 $$
-Available nearest-cell interactions: \newline
+
+Available nearest-cell interactions:
 \begin{enumerate}
     \item $\ket{n,1,L}\bra{n,1,R}$
     \item $\ket{n,1,R}\bra{n+1,1,R}$
@@ -96,4 +97,12 @@ Available nearest-cell interactions: \newline
     \item $\ket{n-1,-1,L}\bra{n,-1,L}$
     \item $\ket{n,-1,R}\bra{n,-1,L}$
 \end{enumerate}
+\begin{equation}
+\begin{split}
+ \hat{H} = a \sum_{n=1}^{6}\Bigg\{ \sum_{C=CW}^{C=CCW}\big[\ket{n,C,R}\bra{n,C,L} + \ket{n,C,L}\bra{n,C,R}\big] \\
+ -2 \big[ \ket{n,1,L}\bra{n,1,R} + \ket{n,1,R}\bra{n+1,1,R} + \ket{n,-1,R}\bra{n,-1,R} \\
++ \ket{n-1,1,L}\bra{n,1,L} + \ket{n-1,-1,L}\bra{n,-1,L} + \ket{n,-1,R}\bra{n,-1,L}\big] \Bigg\}
+\end{split}
+\end{equation}
+
 \end{document}
