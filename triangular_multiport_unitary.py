@@ -36,11 +36,17 @@ def triport_unit(iter_num = 1, phase_a = 45, phase_b = 45, phase_c = 45):
     """
 
     # Unitary Matrix U
-    U = np.array(np.matrix('0 0 0 0 0; 0 0 0 0 0; 1 0 0 0 0;\
-                  1j 0 0 0 0; 0 0 0 0 0'))
+    U = np.matrix('0 0 0 0 0; 0 0 0 0 0; 1 0 0 0 0;\
+                  1j 0 0 0 0; 0 0 0 0 0')
     # Unitary Matrix Initialization
-    U_zeros = np.zeros([5, 5])
+    U_zeros = np.matrix(np.zeros([5, 5]))
 
     # Unitary Matrix of all Transitions
-    U_1 = np.array
-    return U
+    U_1 = 1/np.sqrt(2)*np.bmat([[U, U_zeros, U_zeros], 
+                               [U_zeros, U, U_zeros],
+                               [U_zeros, U_zeros, U]])
+    return U_1
+
+
+# Testing
+a = triport_unit()
