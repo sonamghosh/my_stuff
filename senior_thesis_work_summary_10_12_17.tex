@@ -1,0 +1,90 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{tabu}
+\usepackage{gensymb}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage[export]{adjustbox}
+\usepackage[T1]{fontenc}
+\usepackage{braket}
+
+%\usepackage[pdftex,active,tightpage]{preview}
+%\setlength\PreviewBorder{2mm}
+\usepackage{tikz-3dplot}
+\usepackage{listings, xcolor}
+\usepackage[colorlinks = true,
+            linkcolor = blue,
+            urlcolor  = blue,
+            citecolor = blue,
+            anchorcolor = blue]{hyperref}
+
+\title{Fault Profile Generator Tools User Guide}
+\author{Sonam Ghosh J82C}
+\date{August 2017}
+\lstset{
+    string=[s]{"}{"},
+    stringstyle=\color{blue},
+    comment=[l]{:},
+    commentstyle=\color{black},
+}
+
+
+%\title{senior_thesis_work_summary_9_14_2017}
+%\author{sonamghosh }
+%\date{September 2017}
+
+\begin{document}
+
+Sonam Ghosh Work Summary 10/12/2017 \newline
+\newline
+State (without considering movement) denoted as:
+$$ \ket{n, B}$$
+where $n$ is the unit cell number, $n \in \{1,2,3\}$ and $B$ denoting whether the photon is in a double bond region or single bond region, $B \in \{S, D\}$ \newline
+$$ \ket{S} = \ket{A} = (1,0,0)^{T} , \ket{D} = 1/\sqrt{2} (\ket{B} + \ket{C}) = 1/\sqrt{2} (0,1,1)^{T}$$ 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.35]{optical_benzene_diagram_02.png}
+    \caption{The three unit cells of optical benzene connected, note L refers to S and R refers to D}
+    \label{fig:my_label}
+\end{figure}
+Available nearest neighbor interactions:
+\begin{enumerate}
+    \item $D \rightarrow S$, $n$ fixed
+    \item $S \rightarrow D$, $n$ fixed
+    \item $D \rightarrow S$, $n \rightarrow n-1$
+    \item $S \rightarrow D$, $n \rightarrow n+1$
+\end{enumerate}
+Hamiltonian is given by \newline
+\begin{equation}
+    \begin{split}
+        \hat{H} = \alpha \sum_{n=1}^{3} (\ket{n,D}\bra{n, S}) + \ket{n, S}\bra{n. D}) \\
+        - 2 \big( \ket{n, D}\bra{n-1, S} + \ket{n, S}\bra{n+1, D} \big)
+    \end{split}
+\end{equation}
+\newpage
+Now consider the motion of the photon as either leftmoving $LM$ or right moving $RM$, our new state will be denoted as 
+$$ \ket{n, M, B} $$
+where $M$ refers to the motion of the photon, $M \in \{rm, lm\}$
+The available interactions are as follow:
+\begin{enumerate}
+    \item $D \rightarrow S, rm, n$ fixed
+    \item $S \rightarrow D, lm, n$ fixed
+    \item $S \rightarrow D, rm, n \rightarrow n+1$
+    \item $D \rightarrow S, lm, n \rightarrow n-1$
+    \item $D \rightarrow D, lm, n$ fixed
+    \item $D \rightarrow D, rm, n$ fixed
+    \item $S \rightarrow S, lm, n$ fixed
+    \item $S \rightarrow S, rm, n$ fixed
+\end{enumerate}
+The hamiltonian is given as \newline
+\begin{equation}
+    \begin{split}
+        \hat{H} = \alpha \sum_{n=1}^{3} \big( \ket{n, rm, D} \bra{n, rm, S} + \ket{n, lm, S} \bra{n, lm, D} \big) \\
+        - 2 \big( \ket{n, rm, S} \bra{n+1, rm, D} + \ket{n, lm, D} \bra{n-1, lm, S} \\
+        + \ket{n, lm, D} \bra{n, lm, D} + \ket{n, rm, D} \bra{n, rm, D} \\
+        + \ket{n, lm, S} \bra{n, lm, S} + \ket{n, rm, S} \bra{n, rm, S} \big)
+    \end{split}
+\end{equation}
+\end{document}
