@@ -45,7 +45,44 @@ def triport_unit(iter_num = 1, phase_a = 45, phase_b = 45, phase_c = 45):
     U_1 = 1/np.sqrt(2)*np.bmat([[U, U_zeros, U_zeros], 
                                [U_zeros, U, U_zeros],
                                [U_zeros, U_zeros, U]])
-    return U_1
+    # Transition Matrix from Port A to Port B
+    U_AB = np.matrix([[0, 0, 0, 0, 0], [0, 0, 0, 1j*np.exp(1j*phase_b), 0],
+                      [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 1, 0]])
+
+    # Transition Matrix from Port A to Port C
+    U_AC = np.matrix([[0, 0, 0, 0, 0], [0, 0, 1j*np.exp(1j*phase_c), 0, 0],
+                      [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 1j, 0, 0]])
+
+    # Transition Matrix from Port B to Port A
+    U_BA = np.matrix([[0, 0, 0, 0, 0], [0, 0, 1j*np.exp(1j*phase_a), 0, 0],
+                      [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 1j, 0, 0]])
+
+    # Transition Matrix from Port B to Port C
+    U_BC = np.matrix([[0, 0, 0, 0, 0], [0, 0, 0, 1j*np.exp(1j*phase_c), 0],
+                      [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 1, 0]])
+
+    # Transition Matrix from C to A
+    U_CA = np.matrix([[0, 0, 0, 0, 0], [0, 0, 0, 1j*np.exp(1j*phase_a)],
+                      [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 1, 0]])
+
+    # Transition Matrix from C to B
+    U_CB = np.matrix([[0, 0, 0, 0, 0], [0, 0, 1j*np.exp(1j*phase_b), 0, 0],
+                      [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 1j, 0, 0]])
+
+    # Transition Matrix with A, B, C teansitions
+    U_2 = 1/np.sqrt(2)*np.bmat([[U_zeros, U_BA, U_CA], [U_AB, U_zeros, U_CB],
+                               [U_AC, U_BC, U_zeros]])
+
+    # Transition matrix from A2 to A3 , A4
+    U_Mout = np.matrix([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 1j, 0, 0, 0],
+                        [0, 1, 0, 0, 0], [0, 0, 0, 0, 0]])
+
+    # Transition Matrix for A transitions
+    U_3 = 1/np.sqrt(2)*np.bmat([[U_Mout, U_zeros, U_zeros],
+                               [U_zeros, U_Mout, U_zeros],
+                               [U_zeros, U_zeros, U_Mout]])
+
+    return U_2
 
 
 # Testing
