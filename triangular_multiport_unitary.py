@@ -62,12 +62,13 @@ def triport_unit(iter_num = 1, phase_a = 45, phase_b = 45, phase_c = 45):
                       [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 1, 0]])
 
     # Transition Matrix from C to A
-    U_CA = np.matrix([[0, 0, 0, 0, 0], [0, 0, 0, 1j*np.exp(1j*phase_a)],
+    U_CA = np.matrix([[0, 0, 0, 0, 0], [0, 0, 0, 1j*np.exp(1j*phase_a), 0],
                       [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 1, 0]])
 
     # Transition Matrix from C to B
     U_CB = np.matrix([[0, 0, 0, 0, 0], [0, 0, 1j*np.exp(1j*phase_b), 0, 0],
                       [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 1j, 0, 0]])
+    
 
     # Transition Matrix with A, B, C teansitions
     U_2 = 1/np.sqrt(2)*np.bmat([[U_zeros, U_BA, U_CA], [U_AB, U_zeros, U_CB],
@@ -82,8 +83,14 @@ def triport_unit(iter_num = 1, phase_a = 45, phase_b = 45, phase_c = 45):
                                [U_zeros, U_Mout, U_zeros],
                                [U_zeros, U_zeros, U_Mout]])
 
-    return U_2
+    # Some sort of Matrix  (Rename a bunch of these later)
+    M = np.matrix(np.zeros(np.size(U_1, 1)))
+    z = np.dot(U_2, U_3)
+    for j in range(0, iter_num):
+        M = M + z^(j)*U_2*U_1
+    
+    return M
 
 
 # Testing
-a = triport_unit()
+a = triport_unit(iter_num=5)
