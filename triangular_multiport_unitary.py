@@ -83,14 +83,28 @@ def triport_unit(iter_num = 1, phase_a = 45, phase_b = 45, phase_c = 45):
                                [U_zeros, U_Mout, U_zeros],
                                [U_zeros, U_zeros, U_Mout]])
 
+    # @todo Rename a lot of the stuff below. 
     # Some sort of Matrix  (Rename a bunch of these later)
     M = np.matrix(np.zeros(np.size(U_1, 1)))
     z = np.dot(U_2, U_3)
     for j in range(0, iter_num):
-        M = M + z^(j)*U_2*U_1
+        M = M + z**(j)*U_2*U_1
+
+    C = np.matrix([[M[4, 0], M[4, 5], M[4, 10]],
+                   [M[9, 0], M[9, 5], M[9, 10]],
+                   [M[14, 0], M[14, 5], M[14, 10]]
+                   ])
+
+    amp_1 = np.dot(np.conj(C[0, 0]), C[0, 0])
+    amp_2 = np.dot(np.conj(C[1, 0]), C[1, 0])
+    amp_3 = np.dot(np.conj(C[2, 0]), C[2, 0])
+
+    U_mat = C
+    prob_amps = [amp_1, amp_2, amp_3]
     
-    return M
+    return prob_amps
+    
 
 
 # Testing
-a = triport_unit(iter_num=5)
+a = triport_unit(iter_num=100, phase_a=-135, phase_b=-135, phase_c=-135)
