@@ -160,14 +160,20 @@ def measurement(t_step, psi, space):
         prob.append(prob_amp)
     return prob
 
+# Classical Walk
+def classical_walk(N_length, d=2):
+    classical_prob = np.cumsum(np.random.uniform(-0.5, 0.5, (N_length, d)))
+    return classical_prob
+
 # Plot results
 def plot_pdf(prob_mat):
     """
     @brief Plots the probability density function
     """
 
-    lattice_position = range(-len(prob_mat)/2+1,len(prob_mat)/2+1)
+    lattice_position = np.arange(-len(prob_mat)/2+1,len(prob_mat)/2+1)
     plt.plot(lattice_position, prob_mat)
+    #plt.plot(class_mat)
     plt.xlim([-len(prob_mat)/2+2, len(prob_mat)/2+2])
     plt.ylim([min(prob_mat), max(prob_mat)+0.01])
     plt.ylabel('Probability')
@@ -175,7 +181,8 @@ def plot_pdf(prob_mat):
     plt.show()
 
 # Create insance
-    if __name__ == "__main__":
-        psi_t = quantum_walk(100, psip, 45)  # Performs walk
-        prob_mat = measurement(100, psi_t, 2)  # Measures output
-        plot_pdf(prob_mat)
+if __name__ == "__main__":
+    psi_t = quantum_walk(100, psip, 45)  # Performs walk
+    prob_mat = measurement(100, psi_t, 2)  # Measures output
+    # class_mat = classical_walk(100,1)  # Performs classical walk
+    plot_pdf(prob_mat)
