@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 from math import *
 import pandas as pd
 from cython.parallel import prange
+import plotly.plotly as py
+import plotly.graph_objs as go
 
 
 ket0 = basis(2, 0).unit()  # |0>, |V>
@@ -66,7 +68,39 @@ def measurement(nodes, psi):
     return prob
 
 
+def plot_pdf(prob_mat):
+    #lattice_position = np.arange(-len(prob_mat)/2+1,len(prob_mat)/2+1)
+    lattice_position = prange(len(prob_mat))
+    #plt.plot(lattice_position, prob_mat)
+    #plt.xlim([-len(prob_mat)/2+2, len(prob_mat)/2+2])
+    #plt.ylim([min(prob_mat), max(prob_mat)+0.01])
+    #plt.ylabel('Probability')
+    #plt.xlabel('Position of particle')
+    #plt.show()
+    #(username = 'sonamghosh', key='ZWhMxlc9xwnfQp45Jh8y')
+    """
+    df = pd.DataFrame({'x': lattice_position, 'y': prob_mat})
+    df.head()
+    data = [go.Bar(x=df['x'], y=df['y'])]
+    response = py.plot(data, filename='testing_123')
+    url=response['url']
+    filename=response['filename']
+    print(url)
+    print(filename)
+    """
+    df = pd.DataFrame(data={'Probability': prob_mat})
+    print(df)
+    ax = df.plot(kind='bar', colormap='jet', grid=True,
+                 title='Quantum Walk around a N-Node Circle')
+    ax.set_xlabel('Position of Photon')
+    ax.set_ylabel('Probability')
+
+
+if __name__ == "__main__":
+    psi_t = quantum_walk(psi_1, 7, 4, 45)
+    prob_mat = measurement(4, psi_t)
+    plot_pdf(prob_mat)
 # Testing
 #psi = quantum_walk(psi_1, 4, 3, 35.26)
-psi = quantum_walk(psi_1, 2, 4, 45)
-mat = measurement(4, psi)
+#psi = quantum_walk(psi_1, 2, 4, 45)
+#mat = measurement(4, psi)
