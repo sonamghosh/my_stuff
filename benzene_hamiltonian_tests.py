@@ -31,9 +31,10 @@ class benzene_hamiltonian(object):
 
     Display functions for Momentum and Position Hamiltonians
     Consider QObj stuff?
+    Consider a set of phi_t and/or phi_a values
     """
 
-    def __init__(self, phi_a=0, phi_t=0, n=0, sites=6):
+    def __init__(self, phi_a=0, phi_t=0, n=0, n_list = None, sites=6):
         # Error Checkers (incomplete)
         if (n < 0):
             raise ValueError('n must be greater than or equal to 0')
@@ -45,7 +46,7 @@ class benzene_hamiltonian(object):
         self.alpha = self.exp_fact / self.sqrt_fact
         self.bohr_radius = 5.2917721067e-11  # meters
         # Discretize the momentum space
-        self.k = (2*pi*n)/(sites*self.bohr_radius)
+        self.k = (2*pi*n)/(sites*self.bohr_radius)  # Single Val
         # self.off_diag = -2*np.exp(1j*phi_t)*np.cos(phi_t)
         # Transition Matrices
         self.unit_mat = self.unitary_mat(phi_t)
@@ -59,6 +60,14 @@ class benzene_hamiltonian(object):
         # Solve Hamiltonian Eigenvalue/Eigenvector Problems
         self.pos_eig = self.solve_hamiltonian(self.pos_hamiltonian)
         self.qasimom_eig = self.solve_hamiltonian(self.quasimom_hamiltonian)
+        self.k_energy = self.gen_k_energy(phi_a, phi_t, 1, self.k)
+        # Functionality for a set of k = 2pi*n/Na values + Visualization
+        if n_list:
+            self.dk = self.gen_k_space(n_list, self.bohr_radius, sites)
+            # Temporary set alpha = 1
+            self.plot_Ek = self.plot_k_energy(phi_a, phi_t, 1, self.k)
+        else:
+            pass
 
 
     def unitary_mat(self, phi_t):
@@ -110,3 +119,24 @@ class benzene_hamiltonian(object):
         eig_dict = {'Eigenenergies': eigvals,
                     'Eigenstates': eigvecs}
         return eig_dict
+
+    def gen_k_space(self, n_list, a, N):
+        k_vec = [(2*pi*n)/(N*a) for n in n_list]
+        return k_vec
+
+    def gen_k_energy(self, phi_a, phi_t, alpha, k):
+        mult_1 = 2*np.exp(1j*phi_t) + np.sqrt(5-4*np.exp(1j*phi_t)*np.cos(k))
+        mult_2 = 2*np.exp(1j*phi_t) - np.sqrt(5-4*np.exp(1j*phi_t)*np.cos(k))
+        E_1 = alpha*mult_1
+        E_2 = alpha*mult_2
+        E_k = [E_1, E_2]
+        return E_k
+
+    def plot_k_energy(self, phi_a, phi_t, alpha, k):
+        E_k = self.gen_k_energy(phi_a, phi_t, alpha, k)
+        plt.plot(k, E_k[0], 'r')
+        plt.plot(k, E_k[1], 'b')
+        plt.xlabel(r"$\ k = \frac{2\pi n}{Na}$")
+        plt.ylabel('Energy')
+        # @todo Add title
+
