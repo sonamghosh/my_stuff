@@ -64,8 +64,7 @@ class benzene_hamiltonian(object):
         # Functionality for a set of k = 2pi*n/Na values + Visualization
         if n_list:
             self.dk = self.gen_k_space(n_list, self.bohr_radius, sites)
-            # Temporary set alpha = 1
-            self.plot_Ek = self.plot_k_energy(phi_a, phi_t, 1, self.k)
+            self.plot_Ek = self.plot_k_energy(phi_a, phi_t, self.alpha, self.k)
         else:
             pass
 
@@ -121,10 +120,11 @@ class benzene_hamiltonian(object):
         return eig_dict
 
     def gen_k_space(self, n_list, a, N):
-        k_vec = [(2*pi*n)/(N*a) for n in n_list]
+        # Temporary Set Alpha = 1
+        k_vec = [(2*pi*n)/(N*1) for n in n_list]
         return k_vec
 
-    def gen_k_energy(self, phi_a, phi_t, alpha, k):
+    def gen_k_energy(self, phi_t, alpha, k):
         mult_1 = 2*np.exp(1j*phi_t) + np.sqrt(5-4*np.exp(1j*phi_t)*np.cos(k))
         mult_2 = 2*np.exp(1j*phi_t) - np.sqrt(5-4*np.exp(1j*phi_t)*np.cos(k))
         E_1 = alpha*mult_1
@@ -132,8 +132,8 @@ class benzene_hamiltonian(object):
         E_k = [E_1, E_2]
         return E_k
 
-    def plot_k_energy(self, phi_a, phi_t, alpha, k):
-        E_k = self.gen_k_energy(phi_a, phi_t, alpha, k)
+    def plot_k_energy(self, phi_t, alpha, k):
+        E_k = self.gen_k_energy(phi_t, alpha, k)
         plt.plot(k, E_k[0], 'r')
         plt.plot(k, E_k[1], 'b')
         plt.xlabel(r"$\ k = \frac{2\pi n}{Na}$")
