@@ -55,16 +55,16 @@ class benzene_hamiltonian(object):
         self.disp_unit = self.display_mat(self.unit_mat)
         self.disp_tot = self.display_mat(self.tot_mat)
         # Hamiltonians of Pos (n) and Momentum (K) space
-        self.pos_hamiltonian = self.gen_pos_hamiltonian(phi_t)
+        self.pos_hamiltonian = self.gen_pos_hamiltonian(phi_a, phi_t)
         self.quasimom_hamiltonian = self.gen_quasimom_hamiltonian(phi_t, self.k)
         # Solve Hamiltonian Eigenvalue/Eigenvector Problems
         self.pos_eig = self.solve_hamiltonian(self.pos_hamiltonian)
         self.qasimom_eig = self.solve_hamiltonian(self.quasimom_hamiltonian)
-        self.k_energy = self.gen_k_energy(phi_a, phi_t, 1, self.k)
+        self.k_energy = self.gen_k_energy(phi_t, 1, self.k)
         # Functionality for a set of k = 2pi*n/Na values + Visualization
         if n_list:
             self.dk = self.gen_k_space(n_list, self.bohr_radius, sites)
-            self.plot_Ek = self.plot_k_energy(phi_a, phi_t, self.alpha, self.k)
+            self.plot_Ek = self.plot_k_energy(phi_t, self.alpha, self.dk)
         else:
             pass
 
@@ -86,7 +86,9 @@ class benzene_hamiltonian(object):
         df = pd.DataFrame(mat, columns=list('ABC'))
         return df
 
-    def gen_pos_hamiltonian(self, phi_t):
+    def gen_pos_hamiltonian(self, phi_a, phi_t):
+        # Outside factor
+        
         off_diag = -2*np.exp(1j*phi_t)*np.cos(phi_t)
         ham_mat = np.array([[off_diag, 0, 0 , 1, off_diag, 0],
                             [0, off_diag, 0, 0, 1, off_diag],
@@ -134,9 +136,14 @@ class benzene_hamiltonian(object):
 
     def plot_k_energy(self, phi_t, alpha, k):
         E_k = self.gen_k_energy(phi_t, alpha, k)
-        plt.plot(k, E_k[0], 'r')
-        plt.plot(k, E_k[1], 'b')
+        line1, = plt.plot(k, E_k[0], 'r', label='E_1')
+        line2, = plt.plot(k, E_k[1], 'b', label='E_2')
         plt.xlabel(r"$\ k = \frac{2\pi n}{Na}$")
         plt.ylabel('Energy')
+        # Create a legend for the first line.
+        first_legend = plt.legend(handles=[line1], loc=1)
+        # Add the legend manually to the current Axes.
+        ax = plt.gca().add_artist(first_legend)
+        second_legend = plt.legend(handles=[line2], loc=4)
         # @todo Add title
 
