@@ -45,7 +45,7 @@ class unitcell_hamiltonian(object):
         # Constants
         self.exp_fact = np.exp(1j*phi)
         self.denom_fact = 2 + 1j*self.exp_fact
-        self.exp_amp = 1j*np.exp(-1j*phi) - 1  # rho
+        self.exp_amp = 1j*np.exp(-1j*phi) - 1  # rho = ie^(-iphi) - 1
         self.beta = self.exp_fact / self.denom_fact
         self.bohr_radius = 5.2917721067e-11  # meters , idk if will be used
         # Momentum Discretization (maybe later)
@@ -60,8 +60,65 @@ class unitcell_hamiltonian(object):
         self.pos_hamiltonian = self.gen_pos_hamiltonian(self.tot_mat)
         ############################################################
         # Solve Hamiltonian
+        self.pos_eig = self.solve_hamiltonian(self.pos_hamiltonian)
+
+
+    def gen_unit_mat(self, phi, amp):
+        # \Lambda_{1} matrix
+        mat_1 = np.array([[0, 1, 0, 0],
+                          [1, 0, 0, amp],
+                          [amp, 0, 0, 1],
+                          [0, 0, 1, 0]
+                          ])
+        # \Lambda_{2} matrix
+        mat_2 = np.array([[0, 0, amp, 0],
+                          [0, 0, 0, 0],
+                          [0, 0, 0, 0],
+                          [0, 0, 0, 0]
+                          ])
+        # \Lambda_{3} matrix
+        mat_3 = np.array([[0, 0, 0, 0],
+                          [0, 0, 0, 0],
+                          [0, 0, 0, 0],
+                          [0, amp, 0, 0]
+                          ])
+        # Put it together
+        unit_mat = np.block([[mat_1, mat_2, mat_3],
+                             [mat_3, mat_1, mat_2],
+                             [mat_2, mat_3, mat_1]
+                             ])
+        # Turn into Qobj
+        unit_mat = qt.Qobj(unit_mat)
+        
+        return unit_mat
+
+
+    def display_mat(self, mat):
+        mat = mat.full()
+        df = pd.DataFrame(mat, columns=list('SSDDSSDDSSDD'))
+        return df
+
+
+    def gen_pos_hamiltonian(self, mat):
+        # First Order Taylor Approximation
+        # Take T = 1 and hbar = 1
+        # H = exp(-i*pi/2) ( I - U)
+        eye = qt.qeye(12)
+        alpha = np.exp(-1j*np.pi/2)
+        ham_mat = eye - mat
+        ham_mat = alpha*ham_mat
+        return ham_mat
+
+
+    def solve_hamiltonian(self, mat):
+        # Solve Eigenvalues
+        eigvals = qt.Qobj.eigenenergies(mat)
+        # Solve Eigenstates
+        eigvecs = qt.Qobj.eigenstates(mat)
+        # Store into dict
+        eig_dict = {'Eigenenergies': eigvals,
+                    'Eigenstates': eigvecs}
+        return eig_dict
 
 
 
-        def gen_unit_mat(self, phi, amplitudes):
-            return 'hi'
