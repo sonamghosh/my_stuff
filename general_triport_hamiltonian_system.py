@@ -15,6 +15,7 @@ import pandas as pd
 from scipy.fftpack import fft, ifft
 import matplotlib.pyplot as plt
 import sympy as sp
+from scipy.linalg import logm, expm
 
 
 class unitcell_hamiltonian(object):
@@ -103,10 +104,15 @@ class unitcell_hamiltonian(object):
         # First Order Taylor Approximation
         # Take T = 1 and hbar = 1
         # H = exp(-i*pi/2) ( I - U)
+        """
         eye = qt.qeye(12)
         alpha = np.exp(-1j*np.pi/2)
         ham_mat = eye - mat
         ham_mat = alpha*ham_mat
+        """
+        ham_mat = 1j*logm(mat.full())
+        ham_mat = qt.Qobj(ham_mat)
+        ham_mat = ham_mat.tidyup()
         return ham_mat
 
 
