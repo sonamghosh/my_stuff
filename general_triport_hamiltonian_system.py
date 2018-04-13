@@ -67,12 +67,12 @@ class unitcell_hamiltonian(object):
     def gen_unit_mat(self, phi, amp):
         # \Lambda_{1} matrix
         mat_1 = np.array([[0, 1, 0, 0],
-                          [1, 0, 0, amp],
-                          [amp, 0, 0, 1],
-                          [0, 0, 1, 0]
+                          [1, 0, 0, np.sqrt(2)*amp],
+                          [np.sqrt(2)*amp, 0, 0, (1+amp)],
+                          [0, 0, (1+amp), 0]
                           ])
         # \Lambda_{2} matrix
-        mat_2 = np.array([[0, 0, amp, 0],
+        mat_2 = np.array([[0, 0, np.sqrt(2)*amp, 0],
                           [0, 0, 0, 0],
                           [0, 0, 0, 0],
                           [0, 0, 0, 0]
@@ -81,7 +81,7 @@ class unitcell_hamiltonian(object):
         mat_3 = np.array([[0, 0, 0, 0],
                           [0, 0, 0, 0],
                           [0, 0, 0, 0],
-                          [0, amp, 0, 0]
+                          [0, np.sqrt(2)*amp, 0, 0]
                           ])
         # Put it together
         unit_mat = np.block([[mat_1, mat_2, mat_3],
