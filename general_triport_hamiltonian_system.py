@@ -59,9 +59,12 @@ class unitcell_hamiltonian(object):
         self.disp_tot = self.display_mat(self.tot_mat)
         # Hamiltonians for position (n) [Add momentum later]
         self.pos_hamiltonian = self.gen_pos_hamiltonian(self.tot_mat)
+        self.disp_ham = self.display_mat(self.pos_hamiltonian)
         ############################################################
         # Solve Hamiltonian
         self.pos_eig = self.solve_hamiltonian(self.pos_hamiltonian)
+        # Projected Version without Left/Right
+        self.proj_energies = self.proj_mat(self.beta, self.exp_fact)
 
 
     def gen_unit_mat(self, phi, amp):
@@ -110,9 +113,11 @@ class unitcell_hamiltonian(object):
         ham_mat = eye - mat
         ham_mat = alpha*ham_mat
         """
+        
         ham_mat = 1j*logm(mat.full())
         ham_mat = qt.Qobj(ham_mat)
         ham_mat = ham_mat.tidyup()
+        
         return ham_mat
 
 
@@ -125,6 +130,17 @@ class unitcell_hamiltonian(object):
         eig_dict = {'Eigenenergies': eigvals,
                     'Eigenstates': eigvecs}
         return eig_dict
-
+    
+    def proj_mat(self, const, amp):
+        e1 = 0.5 * const * (2 + amp * (1 - np.sqrt(3)))
+        e2 = 0.5 * const * (2 + amp * (1 + np.sqrt(3)))
+        e3 = const * (1 - amp)
+        e4 = const * (1 + 2 * amp)
+        e_arr = np.array([e1, e2, e3, e4])
+        return e_arr
+        
+    
+    
+    
 
 
