@@ -63,3 +63,46 @@ for i in range(4):
     plt.ylabel(r"$E_{n}(\phi)$")
     plt.title('Eigenenergies $E_{i}(\phi)$ of Projected Position Hamiltonian')
     legend_2 = plt.legend(loc = "center right", bbox_to_anchor=(1,0.5))
+
+
+# EIgenstate visualization
+my_xticks = ['SL1', 'SR1', 'DL1', 'DR1', 'SL2', 'SR2', 'DL2', 'DR2', 'SL3', 'SR3' , 'DL3', 'DR3']
+colors_2 = sb.color_palette("hls", 8)
+colors_3 = sb.color_palette("hls", 4)
+
+p_test = gt.unitcell_hamiltonian(phi = 3*np.pi/2)
+non_periodic = [p_test.pos_eig['Eigenstates'][1][0].full(),
+                p_test.pos_eig['Eigenstates'][1][1].full(),
+                p_test.pos_eig['Eigenstates'][1][4].full(),
+                p_test.pos_eig['Eigenstates'][1][5].full(),
+                p_test.pos_eig['Eigenstates'][1][6].full(),
+                p_test.pos_eig['Eigenstates'][1][7].full(),
+                p_test.pos_eig['Eigenstates'][1][10].full(),
+                p_test.pos_eig['Eigenstates'][1][11].full()]
+
+periodic = [p_test.pos_eig['Eigenstates'][1][2].full(),
+            p_test.pos_eig['Eigenstates'][1][3].full(),
+            p_test.pos_eig['Eigenstates'][1][8].full(),
+            p_test.pos_eig['Eigenstates'][1][9].full(),
+            ]
+
+plt.figure(3)
+for i in range(len(non_periodic)):
+    pnp = plt.plot(np.arange(0,12), non_periodic[i], '-o', label= '$\psi_{%i}$' % (i+1),
+                   color=colors_2[i])
+    plt.xlabel('State of the photon |B, m, n>')
+    plt.xticks(np.arange(0, 12), my_xticks)
+    plt.ylabel('Probability Amplitude')
+    legend_3 = plt.legend(loc = 'center right', bbox_to_anchor=(1,0.5))
+    plt.title('Motion of Photon for non-periodic eigenstates for $\phi$ = $3\pi/2$')
+
+plt.figure(4)
+for i in range(len(periodic)):
+    pnp = plt.plot(np.arange(0,12), periodic[i], '-o', label='$\psi_{%i}$' % (i+1),
+                   color=colors_3[i])
+    plt.xlabel('State of the photon |B, m, n>')
+    plt.xticks(np.arange(0, 12), my_xticks)
+    plt.ylabel('Probability Amplitude')
+    legend_4 = plt.legend(loc = 'center right', bbox_to_anchor=(1,0.5))
+    plt.title('Motion of Photon for periodic eigenstates for $\phi$ = $3\pi/2$')
+
