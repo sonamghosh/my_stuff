@@ -48,6 +48,9 @@ class unitcell_hamiltonian(object):
         self.denom_fact = 2 + 1j*self.exp_fact
         self.exp_amp = 1j*np.exp(-1j*phi) - 1  # rho = ie^(-iphi) - 1
         self.beta = self.exp_fact / self.denom_fact
+        
+        #self.reamp = (self.exp_amp * self.beta).real
+        
         self.bohr_radius = 5.2917721067e-11  # meters , idk if will be used
         # Momentum Discretization (maybe later)
         #######################################
@@ -64,11 +67,14 @@ class unitcell_hamiltonian(object):
         # Solve Hamiltonian
         self.pos_eig = self.solve_hamiltonian(self.pos_hamiltonian)
         # Projected Version without Left/Right
-        self.proj_energies = self.proj_mat(self.beta, self.exp_fact)
+        #self.proj_energies = self.proj_mat(self.beta, self.exp_amp)
+        #self.proj_hamiltonian = self.proj_ham(self.beta, self.exp_amp)
+        self.proj_hamiltonian = self.proj_mat(self.pos_hamiltonian)
+        self.proj_energies = self.solve_hamiltonian(self.proj_hamiltonian)
 
 
     def gen_unit_mat(self, phi, amp):
-        # \Lambda_{1} matrix
+       # \Lambda_{1} matrix
         mat_1 = np.array([[0, 1, 0, 0],
                           [1, 0, 0, np.sqrt(2)*amp],
                           [np.sqrt(2)*amp, 0, 0, (1+amp)],
@@ -131,13 +137,65 @@ class unitcell_hamiltonian(object):
                     'Eigenstates': eigvecs}
         return eig_dict
     
+    
+    def proj_mat(self, H_mat):
+        # Convert QObj to numpy array
+        H_mat = H_mat.full()
+        # Projection Vector index pairs
+        idx = np.arange(12)
+        p_i = [(idx[2*i], idx[2*i+1]) for i in range(len(idx) // 2)]
+        # Empty matrix
+        p_mat = np.zeros([6,6], dtype=complex)
+        # Perform projection
+        for i in range(6):
+            p_1 = np.zeros(12, dtype=complex)
+            p_1[p_i[i][0]] = 1
+            p_1[p_i[i][1]] = 1
+            #print('p_1 ', p_1)  # Debugging
+            for j in range(6):
+                p_2 = np.zeros(12)
+                p_2[p_i[j][0]] = 1
+                p_2[p_i[j][1]] = 1
+                #print('p_2 ' , p_2)  # Debugging
+                p_mat[i][j] = 0.5*np.dot(np.dot(p_1, H_mat), p_2.T)
+        
+        # Convert back to Qobj
+        p_mat = qt.Qobj(p_mat)
+        return p_mat
+    
+        
+                
+    
+    """
+    
     def proj_mat(self, const, amp):
         e1 = 0.5 * const * (2 + amp * (1 - np.sqrt(3)))
         e2 = 0.5 * const * (2 + amp * (1 + np.sqrt(3)))
         e3 = const * (1 - amp)
         e4 = const * (1 + 2 * amp)
+        
+        e1 = 1j*np.log(e1)
+        e2 = 1j*np.log(e2)
+        e3 = 1j*np.log(e3)
+        e4 = 1j*np.log(e4)
+        
         e_arr = np.array([e1, e2, e3, e4])
         return e_arr
+    
+    def proj_ham(self, const, amp):
+        m1 = np.array([[const, const*amp/np.sqrt(2)], [const*amp/np.sqrt(2), const+(amp*const).real]])
+        m2 = const*np.array([[0, amp/np.sqrt(2)], [0, 0]])
+        m3 = const*np.array([[0, 0], [amp/np.sqrt(2), 0]])
+        unit_proj = np.block([[m1, m2, m3],
+                                      [m3, m1, m2],
+                                      [m2, m3, m1]
+                                      ])
+        #ham_proj = qt.Qobj(1j*logm(unit_proj)).tidyup()
+        ham_proj = 1j*logm(unit_proj)
+        ham_proj = qt.Qobj(ham_proj)
+        ham_proj = ham_proj.tidyup()
+        return unit_proj, ham_proj
+    """
         
     
     
