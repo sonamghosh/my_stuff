@@ -27,7 +27,7 @@ for i in phi_angles:
     photon = gt.unitcell_hamiltonian(phi = i)
     eig_dict.append(photon.pos_eig['Eigenenergies'])
     ham_dict.append(photon.pos_hamiltonian)
-    penerg_dict.append(photon.proj_energies)
+    penerg_dict.append(photon.proj_energies['Eigenenergies'])
     
 # Consider making interactive plot with Blokeh or Plotly
 
@@ -55,7 +55,7 @@ for i in range(12):
     
 # Projected Out Energy Spectrum
 plt.figure(2)
-for i in range(4):
+for i in range(6):
     pe_list = [item[i] for item in penerg_dict]
     l2 = plt.plot(phi_angles, pe_list, '-o', label= '$E_{%i}$' % (i+1),
                     color=colors[i])
